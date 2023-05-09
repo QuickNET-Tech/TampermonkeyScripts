@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         EnforceLatestVideosYT
 // @description  Clicks the "Latest" button when visiting a YouTuber's "Videos" tab on their channel
-// @match        https://www.youtube.com/*
+// @match        *://www.youtube.com/*
 // @namespace    https://github.com/QuickNET-Tech/
 // @version      1
 // @grant        none
@@ -11,14 +11,12 @@
 function initObserver() {
     let oldURL = window.location.href;
 
-    const observerCallback = function(mutationsList, observer) {
+    const observer = new MutationObserver(function(mutationsList, observer) {
         if (oldURL !== window.location.href) {
             oldURL = window.location.href;
             scriptmain();
         }
-    };
-
-    const observer = new MutationObserver(observerCallback);
+    });
 
     observer.observe(document.querySelector('head'), { childList: true, subtree: true });
 }
