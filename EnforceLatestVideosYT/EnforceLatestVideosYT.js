@@ -1,12 +1,27 @@
 
 // ==UserScript==
 // @name         EnforceLatestVideosYT
+// @description  Clicks the "Latest" button when visiting a YouTuber's "Videos" tab on their channel
+// @match        https://www.youtube.com/*
 // @namespace    https://github.com/QuickNET-Tech/
 // @version      1
-// @description  Clicks the "Latest" button when visiting a YouTuber's "Videos" tab on their channel
-// @match        https://www.youtube.com/*/videos
 // @grant        none
 // ==/UserScript==
+
+function initObserver() {
+    let oldURL = window.location.href;
+
+    const observerCallback = function(mutationsList, observer) {
+        if (oldURL !== window.location.href) {
+            oldURL = window.location.href;
+            scriptmain();
+        }
+    };
+
+    const observer = new MutationObserver(observerCallback);
+
+    observer.observe(document.querySelector('head'), { childList: true, subtree: true });
+}
 
 async function getElementOfLatestChipButton() {
     var element = null;
@@ -24,17 +39,22 @@ async function getElementOfLatestChipButton() {
     return element;
 }
 
-
-async function scriptmain() {
-    'use strict';
-
-    let element = await getElementOfLatestChipButton();
-
-    element.dispatchEvent(new Event('click', {
+function clickLatestChip(chipElement) {
+    chipElement.dispatchEvent(new Event('click', {
         bubbles: true,
         cancelable: true,
         view: window
     }));
 }
 
+async function scriptmain() {
+    'use strict';
+
+    let element = await getElementOfLatestChipButton();
+
+    clickLatestChip(element);
+}
+
 scriptmain();
+
+initObserver();
