@@ -15,9 +15,9 @@ function logConsole(...args) {
     const timestr = new Date().toISOString();
     const message = args.map(arg => typeof arg === 'object'
         ? JSON.stringify(arg)
-        : String(arg))
-        .join(' ');
-    
+        : String(arg)
+    ).join(' ');
+
     console.log(`[${scriptName}][${timestr}] ${message}`);
 }
 
@@ -61,22 +61,21 @@ function clickLatestChip(chipElement) {
         cancelable: true,
         view: window
     }));
+
     logConsole("Sent click event for the Latest chip element");
 }
 
 async function scriptmain() {
-    let forYouChipElementChild = await documentQuerySelectorWait(3000, '[title="For you"]');
+    const forYouChipElementChild = await documentQuerySelectorWait(3000, '[title="For you"]');
     if (forYouChipElementChild == null) {
         logConsole("For you chip not found, no change made to sort");
         return;
     }
 
-    let latestChipElementChild = await documentQuerySelectorWait(3000, '[title="Latest"]');
+    const latestChipElementChild = await documentQuerySelectorWait(3000, '[title="Latest"]');
     if(latestChipElementChild) {
         clickLatestChip(latestChipElementChild.parentElement);
     }
 }
-
-scriptmain();
 
 initObserver();
